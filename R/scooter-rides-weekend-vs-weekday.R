@@ -71,4 +71,4 @@ explore_scoot %>%
   labs(fill = "", 
        title = "Scooter ride distribution\nWeekday vs. Weekend") + 
   scale_fill_fivethirtyeight() %>% 
-  ggsave("scooter-rides-weekend-vs-weekday.png)
+  ggsave("scooter-rides-weekday-vs-weekend.png)
