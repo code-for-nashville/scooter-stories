@@ -1,0 +1,25 @@
+{
+  "R": {
+    "Version": "3.6.1",
+    "Repositories": [
+      {
+        "Name": "CRAN",
+        "URL": "https://mirrors.nics.utk.edu/cran"
+      }
+    ]
+  },
+  "Packages": {
+    "renv": {
+      "Package": "renv",
+      "Version": "0.7.0-126",
+      "Source": "GitHub",
+      "RemoteType": "github",
+      "RemoteHost": "api.github.com",
+      "RemoteRepo": "renv",
+      "RemoteUsername": "rstudio",
+      "RemoteRef": "master",
+      "RemoteSha": "b39688992a45e12f241c18f85f8b8432315e7027",
+      "Hash": "7f385af973e49e849f15e6d822a07511"
+    }
+  }
+}
