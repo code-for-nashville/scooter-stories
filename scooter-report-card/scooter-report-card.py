@@ -11,13 +11,16 @@ import numpy as np
 # assign the path of the code-for-nashville open data portal on githup to a variable
 # 
 dataPath = 'https://raw.githubusercontent.com/code-for-nashville/open-data-portal/feature/scooter-2019-08-clean-up/nashville/scooter-data/'
+# dataPath = 'https://raw.githubusercontent.com/code-for-nashville/open-data-portal/feature/scooter-extract/nashville/scooter-data/'
 
 # 
 # Make a list of all the files to download from the open data portal
-# currently files for Just 22 through August 5 are available
+# currently files for July 22 through Sept 9 are available
 # 
 fileNames = ['scooter_extract_2019-07-'+str(x)+'.csv' for x in range(22,32)]
 fileNames = fileNames + ['scooter_extract_2019-08-0'+str(x)+'.csv' for x in range(1,6)]
+# fileNames = ['scooter_extract_2019-07-20_to_2019-09-09.csv']
+
 
 # 
 # make a list of the columns for the facts table
@@ -40,7 +43,7 @@ sumdColumns = ['company_name', 'sumd_group', 'sumd_id', 'sumd_type']
 # In[2]:
 
 
-get_ipython().run_cell_magic('time', '', '# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load these 15 files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)')
+get_ipython().run_cell_magic('time', '', '# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load this file\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)')
 
 
 # In[3]:
@@ -94,15 +97,45 @@ twtyfiveMostMovedScooters
 # In[7]:
 
 
+companyStats = companyStats.merge(                                   totLocs[totLocs['latitude_rnd'] == 0]                                     .merge(sumd[['company_name', 'sumd_id']], on='sumd_id')                                     .groupby('company_name')                                     .count()                                     .reset_index()[['company_name', 'sumd_id']]                                     .rename(columns={'company_name': 'Company', 'sumd_id': 'Scooters Not Ridden'})                                     ,on='Company')
+
+
+# In[8]:
+
+
+companyStats['Active Scooters'] = companyStats['Number Of Scooters'] - companyStats['Scooters Not Ridden']
+
+
+# In[9]:
+
+
+companyStats
+
+
+# In[10]:
+
+
 # 
 # Calculate the total number of rides per company
 # over all of the days in the dataset (15 days)
 # 
-companyStats = totLocs                 .merge(sumd[['company_name', 'sumd_id']], on='sumd_id')                 .groupby('company_name')                 .sum()                 .reset_index()[['company_name', 'latitude_rnd']]                 .rename(columns={'company_name': 'Company', 'latitude_rnd': 'Total Rides'})                 .merge(companyStats, on='Company')
+companyStats = totLocs                 .merge(sumd[['company_name', 'sumd_id']], on='sumd_id')                 .groupby('company_name')                 .sum()                 .reset_index()[['company_name', 'latitude_rnd']]                 .rename(columns={'company_name': 'Company', 'latitude_rnd': 'Total Rides'})                 .merge(companyStats, on='Company')                 .sort_values(by=['Total Rides'], ascending = False)
 
-companyStats['Avg Rides Per Scooter'] = companyStats['Total Rides'] / companyStats['Number Of Scooters']
+companyStats = companyStats                 .append(pd.Series(['TOTAL'], index=['Company']).append(companyStats.sum(numeric_only = True)),                         ignore_index = True)
 
-companyStats.sort_values(by=['Total Rides'], ascending = False)
+companyStats['Avg Rides Per Scooter'] = companyStats['Total Rides'] / companyStats['Active Scooters']
+
+
+# In[11]:
+
+
+columnFormats = {'Total Rides': '{:,d}',
+                 'Number Of Scooters': '{:,d}',
+                 'Scooters Not Ridden': '{:,d}',
+                 'Active Scooters': '{:,d}',
+                 'Avg Rides Per Scooter': '{:.2f}'}
+
+companyStats.style.format(columnFormats)
 
 
 # In[ ]:
