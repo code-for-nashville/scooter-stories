@@ -15,7 +15,7 @@ dataPath = 'https://raw.githubusercontent.com/code-for-nashville/open-data-porta
 
 # 
 # Make a list of all the files to download from the open data portal
-# currently files for July 22 through Sept 9 are available
+# currently files for July 22 through August 5 are available
 # 
 fileNames = ['scooter_extract_2019-07-'+str(x)+'.csv' for x in range(22,32)]
 fileNames = fileNames + ['scooter_extract_2019-08-0'+str(x)+'.csv' for x in range(1,6)]
@@ -43,7 +43,7 @@ sumdColumns = ['company_name', 'sumd_group', 'sumd_id', 'sumd_type']
 # In[2]:
 
 
-get_ipython().run_cell_magic('time', '', '# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load this file\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)')
+get_ipython().run_cell_magic('time', '', '# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load these files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)')
 
 
 # In[3]:
