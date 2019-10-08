@@ -26,7 +26,7 @@ Whenever you make changes to the notebook, please download a python (.py) versio
 This is more useful in source control since it just show the code (without formatting or results).
 If you don't want to click and drag to move it from your downloads, you can run:
 ```
-pipenv run jupyter nbconvert --to py *.ipynb
+pipenv run jupyter nbconvert --to python *.ipynb
 ```
 
 Meanwhile, the notebook will also update the .png which displays the output of the results.
