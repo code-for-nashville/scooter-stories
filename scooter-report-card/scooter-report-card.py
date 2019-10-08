@@ -139,6 +139,20 @@ columnFormats = {'Total Rides': '{:,d}',
 companyStats.style.format(columnFormats)
 
 
+# In[79]:
+
+
+displayStats = companyStats[[
+    'Company',
+    'Total Rides',
+    'Number Of Scooters',
+    '% Scooters Not Ridden',
+    'Avg Rides Per Active Scooter'
+]]
+
+displayStats.style.format(columnFormats)
+
+
 # In[ ]:
 
 
