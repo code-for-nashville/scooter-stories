@@ -123,7 +123,7 @@ companyStats = totLocs                 .merge(sumd[['company_name', 'sumd_id']],
 
 companyStats = companyStats                 .append(pd.Series(['TOTAL'], index=['Company']).append(companyStats.sum(numeric_only = True)),                         ignore_index = True)
 
-companyStats['Avg Rides Per Scooter'] = companyStats['Total Rides'] / companyStats['Active Scooters']
+companyStats['Avg Rides Per Active Scooter'] = companyStats['Total Rides'] / companyStats['Active Scooters']
 
 
 # In[11]:
@@ -133,7 +133,7 @@ columnFormats = {'Total Rides': '{:,d}',
                  'Number Of Scooters': '{:,d}',
                  'Scooters Not Ridden': '{:,d}',
                  'Active Scooters': '{:,d}',
-                 'Avg Rides Per Scooter': '{:.2f}'}
+                 'Avg Rides Per Active Scooter': '{:.2f}'}
 
 companyStats.style.format(columnFormats)
 
