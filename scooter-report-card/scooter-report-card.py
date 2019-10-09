@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+# # Nashville Scooter Company Report Card
+# ## Data Prep
+
 # In[1]:
 
 
@@ -43,27 +46,27 @@ sumdColumns = ['company_name', 'sumd_group', 'sumd_id', 'sumd_type']
 # In[2]:
 
 
-get_ipython().run_cell_magic('time', '', "# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load these files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)\nrawData = rawData[rawData['extract_date_cst'].between('2019-07-29', '2019-08-04')]")
+get_ipython().run_cell_magic('time', '', "# \n# load all the data files into a single dataframe\n# this takes approximately 8 minutes to load these files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)\nrawData = rawData[rawData['extract_date_cst'].between('2019-07-29', '2019-08-04')]")
 
 
-# In[166]:
+# In[3]:
 
 
 # ensure enough extracts per day (should be about 96 slices per day for one every 15 minutes)
-scooterFacts.groupby('extract_date_cst').extract_time_cst.nunique()
-
-
-# In[140]:
-
-
-get_ipython().run_cell_magic('time', '', "# \n# create fact and dimension tables\n# \nrawData['company_name'] = [x.upper() for x in rawData['company_name']]\nrawData['sumd_group'] = [x.upper() for x in rawData['sumd_group']]\ncompany = rawData[companyColumns].drop_duplicates()\nsumd = rawData[sumdColumns].drop_duplicates()\nsumd = sumd[sumd['sumd_group']=='SCOOTER']\nscooterFacts = rawData[rawData['sumd_group']=='SCOOTER']\nscooterFacts = scooterFacts[factColumns]")
+rawData.groupby('extract_date_cst').extract_time_cst.nunique()
 
 
 # In[4]:
 
 
+get_ipython().run_cell_magic('time', '', "# \n# create fact and dimension tables\n# \nrawData['company_name'] = [x.upper() for x in rawData['company_name']]\nrawData['sumd_group'] = [x.upper() for x in rawData['sumd_group']]\ncompany = rawData[companyColumns].drop_duplicates()\nsumd = rawData[sumdColumns].drop_duplicates()\nsumd = sumd[sumd['sumd_group']=='SCOOTER']\nscooterFacts = rawData[rawData['sumd_group']=='SCOOTER']\nscooterFacts = scooterFacts[factColumns]")
+
+
+# In[5]:
+
+
 # 
-# Create two new columns with the latitude and longitdue rounded to 3 places
+# Create two new columns with the latitude and longitude rounded to 3 places
 # Using this rounded location, will allow for scooters within about 350 ft of each other
 # to appear in the same location, thus minimizing the number of unique locations.
 # 
@@ -71,26 +74,24 @@ scooterFacts['latitude_rnd'] = round(scooterFacts['gps_latitude'], 3)
 scooterFacts['longitude_rnd'] = round(scooterFacts['gps_longitude'], 3)
 
 
-# In[5]:
+# # How many scooters does each company have in Nashville?
+
+# In[6]:
 
 
-# 
-# How many scooters does each company have in Nashville?
-# 
 companyStats = sumd[['company_name', 'sumd_id']]                 .groupby('company_name').count()                 .reset_index()                 .rename(columns={'company_name': 'Company', 'sumd_id': 'Number Of Scooters'})
 
 companyStats
 
 
-# In[6]:
-
-
-# 
-# What are the 25 most popular scooters?
+# # What are the 25 most popular scooters?
 # The table below shows the 25 scooters that were reported in the most locations in a day.
-# the numbers under the 'latitude_rnd' and 'longitude_rnd' columns represent the average number
+# The numbers under the 'latitude_rnd' and 'longitude_rnd' columns represent the average number
 # of locations on each day in the dataset.
-# 
+
+# In[7]:
+
+
 numOfLocsPerDay = scooterFacts[['availability_start_date_cst', 'latitude_rnd', 'longitude_rnd', 'sumd_id']]                     .drop_duplicates()                     .groupby(['sumd_id', 'availability_start_date_cst']).count() - 1
 
 avgLocsPerDay = numOfLocsPerDay.groupby('sumd_id').mean()
@@ -101,31 +102,29 @@ twtyfiveMostMovedScooters = avgLocsPerDay                             .sort_valu
 twtyfiveMostMovedScooters
 
 
-# In[7]:
+# In[8]:
 
 
 companyStats = companyStats.merge(                                   totLocs[totLocs['latitude_rnd'] == 0]                                     .merge(sumd[['company_name', 'sumd_id']], on='sumd_id')                                     .groupby('company_name')                                     .count()                                     .reset_index()[['company_name', 'sumd_id']]                                     .rename(columns={'company_name': 'Company', 'sumd_id': 'Scooters Not Ridden'})                                     ,on='Company')
 
 
-# In[8]:
+# In[9]:
 
 
 companyStats['Active Scooters'] = companyStats['Number Of Scooters'] - companyStats['Scooters Not Ridden']
 
 
-# In[9]:
+# In[10]:
 
 
 companyStats
 
 
-# In[10]:
+# # Calculate the total number of rides per company (over the whole week)
+
+# In[11]:
 
 
-# 
-# Calculate the total number of rides per company
-# over all of the days in the dataset (15 days)
-# 
 companyStats = totLocs                 .merge(sumd[['company_name', 'sumd_id']], on='sumd_id')                 .groupby('company_name')                 .sum()                 .reset_index()[['company_name', 'latitude_rnd']]                 .rename(columns={'company_name': 'Company', 'latitude_rnd': 'Total Rides'})                 .merge(companyStats, on='Company')                 .sort_values(by=['Total Rides'], ascending = False)
 
 companyStats = companyStats                 .append(pd.Series(['TOTAL'], index=['Company']).append(companyStats.sum(numeric_only = True)),                         ignore_index = True)
@@ -134,7 +133,9 @@ companyStats['Avg Rides Per Active Scooter'] = companyStats['Total Rides'] / com
 companyStats['% Scooters Ridden'] = companyStats['Active Scooters'] / companyStats['Number Of Scooters']
 
 
-# In[11]:
+# # Format Columns
+
+# In[12]:
 
 
 columnFormats = {'Total Rides': '{:,d}',
@@ -142,13 +143,13 @@ columnFormats = {'Total Rides': '{:,d}',
                  '% Scooters Ridden': '{:.0%}',
                  'Active Scooters': '{:,d}',
                  'Avg Rides Per Active Scooter': '{:.2f}'}
-
 companyStats.style.format(columnFormats)
 
 
-# In[79]:
+# ## Choose columns, add color bars
 
-days = len(set(scooterFacts['availability_start_date_cst']))
+# In[13]:
+
 
 displayStats = companyStats[[
     'Company',
