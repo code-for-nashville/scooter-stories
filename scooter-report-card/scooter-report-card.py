@@ -43,10 +43,17 @@ sumdColumns = ['company_name', 'sumd_group', 'sumd_id', 'sumd_type']
 # In[2]:
 
 
-get_ipython().run_cell_magic('time', '', '# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load these files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)')
+get_ipython().run_cell_magic('time', '', "# \n# load all the data files into a single dataframe\n# this take approximately 8 minutes to load these files\n# \nrawData = pd.concat([pd.read_csv(dataPath+f) for f in fileNames], sort = False)\nrawData = rawData[rawData['extract_date_cst'].between('2019-07-29', '2019-08-04')]")
 
 
-# In[3]:
+# In[166]:
+
+
+# ensure enough extracts per day (should be about 96 slices per day for one every 15 minutes)
+scooterFacts.groupby('extract_date_cst').extract_time_cst.nunique()
+
+
+# In[140]:
 
 
 get_ipython().run_cell_magic('time', '', "# \n# create fact and dimension tables\n# \nrawData['company_name'] = [x.upper() for x in rawData['company_name']]\nrawData['sumd_group'] = [x.upper() for x in rawData['sumd_group']]\ncompany = rawData[companyColumns].drop_duplicates()\nsumd = rawData[sumdColumns].drop_duplicates()\nsumd = sumd[sumd['sumd_group']=='SCOOTER']\nscooterFacts = rawData[rawData['sumd_group']=='SCOOTER']\nscooterFacts = scooterFacts[factColumns]")
@@ -124,7 +131,7 @@ companyStats = totLocs                 .merge(sumd[['company_name', 'sumd_id']],
 companyStats = companyStats                 .append(pd.Series(['TOTAL'], index=['Company']).append(companyStats.sum(numeric_only = True)),                         ignore_index = True)
 
 companyStats['Avg Rides Per Active Scooter'] = companyStats['Total Rides'] / companyStats['Active Scooters']
-companyStats['% Scooters Not Ridden'] = companyStats['Scooters Not Ridden'] / companyStats['Number Of Scooters']
+companyStats['% Scooters Ridden'] = companyStats['Active Scooters'] / companyStats['Number Of Scooters']
 
 
 # In[11]:
@@ -132,7 +139,7 @@ companyStats['% Scooters Not Ridden'] = companyStats['Scooters Not Ridden'] / co
 
 columnFormats = {'Total Rides': '{:,d}',
                  'Number Of Scooters': '{:,d}',
-                 '% Scooters Not Ridden': '{:.0%}',
+                 '% Scooters Ridden': '{:.0%}',
                  'Active Scooters': '{:,d}',
                  'Avg Rides Per Active Scooter': '{:.2f}'}
 
@@ -141,16 +148,17 @@ companyStats.style.format(columnFormats)
 
 # In[79]:
 
+days = len(set(scooterFacts['availability_start_date_cst']))
 
 displayStats = companyStats[[
     'Company',
     'Total Rides',
     'Number Of Scooters',
-    '% Scooters Not Ridden',
+    '% Scooters Ridden',
     'Avg Rides Per Active Scooter'
 ]]
 
-displayStats.style.format(columnFormats)
+displayStats.style.format(columnFormats).bar(color='lightblue')
 
 
 # In[ ]:
