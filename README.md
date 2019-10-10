@@ -1,37 +1,13 @@
-## Welcome to GitHub Pages
+# Scooter Stories
+These "data stories" were created by C4N volunteers in collaboration with Nashville Public Radio.
+We hope these data stories inform and engage the public in a conversation about scooters.
+This is important in Q4 2019 because the city is deciding who gets to operate scooters and how.
 
-You can use the [editor on GitHub](https://github.com/code-for-nashville/scooter-stories/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+# Navigation
+Each story was published via a tweet from the [Code for Nashville Twitter].
+They are each listed here with a web view of the report and a link to the source code.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+| story description | report | source code |
+| scooter-report-card | [report](./scooter-report-card/scooter-report-card.html) | [source](./scooter-report-card/) |
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/code-for-nashville/scooter-stories/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+[Code for Nashville Twitter]: https://twitter.com/code4nashville
