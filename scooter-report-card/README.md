@@ -5,7 +5,7 @@ The goal of this analysis was to gather basic summary usage statistics on each s
 
 To see the results, go straight to the [report].
 
-If you're interested in playing with the code or contributing improvements, please see [CONTRIBUTING.md].
+If you're interested in playing with the code or contributing improvements, please see [./CONTRIBUTING.md].
 
 
 [report]: ./scooter-report-card.html
