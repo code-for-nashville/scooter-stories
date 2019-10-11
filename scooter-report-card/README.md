@@ -1,9 +1,9 @@
 # Scooter Report Card
-![Scooter Company Usage Report Card]
+[![Scooter Company Usage Report Card]][report]
 
 The goal of this analysis was to gather basic summary statistics on each scooter company.
 
-To see the results, go straight to the [![Scooter Company Usage Report Card]][report].
+To see the results, go straight to the [report].
 
 ## File Structure
 The [jupyter] notebook (.ipynb) is both a place to run / develop code and a report of the results.
