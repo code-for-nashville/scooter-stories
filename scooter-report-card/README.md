@@ -5,8 +5,9 @@ The goal of this analysis was to gather basic summary usage statistics on each s
 
 To see the results, go straight to the [report].
 
-If you're interested in playing with the code or contributing improvements, please see [./CONTRIBUTING.md].
+If you'd like to play with the code or contribute improvements, please see our [Contribution Guidelines].
 
 
 [report]: ./scooter-report-card.html
 [Scooter Company Usage Report Card]: ./scooter-report-card.png
+[Contribution Guidelines]: ./CONTRIBUTING.md
