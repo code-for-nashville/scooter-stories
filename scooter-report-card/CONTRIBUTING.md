@@ -1,7 +1,7 @@
 ## File Structure
-The [jupyter] notebook (.ipynb) is both a place to run / develop code and a report of the results.
+The [jupyter] notebook (.ipynb) lets you run and develop code interactively.
 
-`Pipfile` and `Pipfile.lock` control the pythn dependencies (via [pipenv]).
+`Pipfile` and `Pipfile.lock` control the [python] dependencies (via [pipenv]).
 This is helps you ensure you have everything you need to run the code.
 
 The other files are artifacts that derive from the notebook.
@@ -12,7 +12,7 @@ The first time, you may need to install the python dependencies with:
 pipenv install
 ```
 This will only work if you have [pipenv] installed.
-Or you can use your own python package manager to install the requirements in the `Pipfile`.
+Or you can use your own [python] package manager to install the requirements in the `Pipfile`.
 
 To start the notebook, run:
 ```
@@ -31,3 +31,4 @@ Please run the same command with `html` (in place of `python`).
 
 [jupyter]: https://jupyter.org/index.html
 [pipenv]: https://pipenv-fork.readthedocs.io/en/latest/
+[python]: https://www.python.org/
