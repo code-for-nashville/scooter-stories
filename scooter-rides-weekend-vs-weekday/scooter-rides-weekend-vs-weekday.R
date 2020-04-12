@@ -11,11 +11,10 @@ library(pacman)
 p_load(tidyverse, scales, lubridate, ggthemes, ggpubr)
 
 # Download Code for Nashville's "open-data-portal" repo from Krys Mathis
-setwd("../Downloads/open-data-portal-feature-scooter-2019-09-clean-up/open-data-portal-feature-scooter-2019-09-clean-up/nashville/scooter-data/")
-
+raw_data_url <- "https://raw.githubusercontent.com/code-for-nashville/open-data-portal/feature/scooter-2019-09-clean-up/nashville/scooter-data/scooter_extract_2019-07-20_to_2019-09-09.csv"
 # 1 Data Wrangling ####
 
-scoot <- read_csv("scooter_extract_2019-07-20_to_2019-09-09.csv", 
+scoot <- read_csv(raw_data_url, 
                col_types = cols(.default = col_character(),
                                 availability_duration = col_double(),
                                 availability_start_date = col_date(format = ""),
@@ -39,10 +38,10 @@ scoot <- read_csv("scooter_extract_2019-07-20_to_2019-09-09.csv",
 ##scoot %>% 
 ##  summarise(min_datetime = min(last_extract_date_cst), 
 ##            max_datetime = max(last_extract_date_cst))
-## 7/20 to 9/20
+## 7/20/19 to 9/20/19
 
 explore_scoot <- scoot %>% 
-  filter(gps_longitude < -50) %>% 
+  filter(gps_longitude < -50) %>%  # filter to remove scooters west of -50 degrees longitude
   arrange(sumd_id, last_extract_date_cst, last_extract_time_cst) %>% 
   group_by(sumd_id) %>% 
   mutate(id = row_number()) %>% 
@@ -71,4 +70,4 @@ explore_scoot %>%
   labs(fill = "", 
        title = "Scooter ride distribution\nWeekday vs. Weekend") + 
   scale_fill_fivethirtyeight() %>% 
-  ggsave("scooter-rides-weekday-vs-weekend.png)
+  ggsave("scooter-rides-weekday-vs-weekend.png")
